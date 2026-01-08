@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVE FILMS | Production House</title>
+    <style>
+        /* --- MAIN STYLES --- */
+        body { margin: 0; padding: 0; background-color: #0a0a0a; color: #f0f0f0; font-family: 'Helvetica Neue', sans-serif; text-align: center; }
+
+        /* Navigation */
+        nav { padding: 20px; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
+        .nav-logo-text { font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: #e50914; }
+        .nav-links a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 0.9rem; text-transform: uppercase; }
+
+        /* Hero */
+        .hero { height: 85vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?q=80&w=2070&auto=format&fit=crop'); background-size: cover; background-position: center; }
+        .hero-logo { width: 280px; margin-bottom: 25px; display: block; filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.8)); }
+        .hero p { font-size: 1.3rem; color: #ddd; letter-spacing: 1px; }
+        .btn { margin-top: 35px; padding: 12px 35px; background-color: #e50914; color: white; text-decoration: none; font-weight: bold; border-radius: 4px; transition: 0.3s; font-size: 1rem; text-transform: uppercase; }
+        .btn:hover { background-color: #b20710; }
+
+        /* Sections */
+        .section { padding: 70px 20px; max-width: 1100px; margin: 0 auto; }
+        h2 { border-bottom: 3px solid #e50914; display: inline-block; padding-bottom: 10px; margin-bottom: 50px; font-size: 2rem; text-transform: uppercase; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; justify-content: center; }
+        
+        /* Cards */
+        .movie-card { background: #1a1a1a; padding: 15px; border-radius: 8px; transition: transform 0.3s; text-align: left; position: relative; max-width: 350px; margin: 0 auto; width: 100%; }
+        .clickable-card { cursor: pointer; }
+        .clickable-card:hover { transform: translateY(-10px); box-shadow: 0 10px 20px rgba(229, 9, 20, 0.4); }
+        .movie-poster, .upcoming-poster { width: 100%; height: auto; border-radius: 4px; margin-bottom: 15px; }
+        .poster-placeholder { width: 100%; height: 400px; background-color: #333; display: flex; align-items: center; justify-content: center; color: #555; border-radius: 4px; margin-bottom: 15px; flex-direction: column; }
+        .movie-title { font-size: 1.3rem; margin-top: 10px; color: white; font-weight: bold; }
+        .movie-tag { color: #e50914; font-size: 0.9rem; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+        .upcoming-desc { font-size:0.9rem; color:#ccc; margin-top:10px; line-height: 1.4; }
+
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.95); z-index: 1000; justify-content: center; align-items: center; padding: 20px; overflow-y: auto; }
+        .modal-content { background-color: #1a1a1a; max-width: 900px; width: 100%; border-radius: 8px; display: flex; flex-wrap: wrap; border: 1px solid #333; }
+        .modal-image { flex: 1; min-width: 300px; }
+        .modal-image img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: 8px 0 0 8px; }
+        .modal-details { flex: 1.5; padding: 40px; text-align: left; min-width: 300px; }
+        .modal-close { position: absolute; top: 15px; right: 25px; color: white; font-size: 40px; cursor: pointer; z-index: 10; }
+        .modal-h1 { font-size: 2rem; margin-top: 0; color: #fff; margin-bottom: 5px; }
+        .modal-meta { color: #e50914; font-weight: bold; margin-bottom: 25px; text-transform: uppercase; letter-spacing: 1px; }
+        .modal-desc { line-height: 1.6; color: #ccc; margin-bottom: 30px; }
+        .credits-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; border-top: 1px solid #333; padding-top: 20px; font-size: 0.95rem; }
+        .credit-item strong { color: #e50914; display: block; margin-bottom: 3px; }
+        .credit-item span { color: #ddd; }
+
+        /* Footer */
+        .footer { background-color: #000; padding: 50px 20px; margin-top: 80px; font-size: 0.9rem; color: #777; border-top: 1px solid #222; }
+        .contact-link { color: white; font-weight: bold; font-size: 1rem; text-decoration: none; transition: color 0.3s; }
+        .contact-link:hover { color: #e50914; }
+        @media (max-width: 700px) { .modal-content { flex-direction: column; } .modal-image img { border-radius: 8px 8px 0 0; max-height: 400px; } }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-logo-text">SVE FILMS</div>
+        <div class="nav-links">
+            <a href="#work">Work Done</a>
+            <a href="#upcoming">Upcoming</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <img src="logo.png" alt="Logo" class="hero-logo">
+        <p>Stories with a Signature</p>
+        <a href="https://forms.gle/isTSQFcJnBpCFaRN7" target="_blank" class="btn">Join Us</a>
+    </div>
+
+    <div id="work" class="section">
+        <h2>Work Done</h2>
+        <div class="grid">
+            <div class="movie-card clickable-card" onclick="openModal('badukina')">
+                <img src="badukina-poster.png" alt="Badukina Poster" class="movie-poster">
+                <div class="movie-title">ಬದುಕಿನ ಪ್ರಶ್ನೆಗೆ ಸಾವು ಉತ್ತರವೇ?</div>
+                <div class="movie-tag">Irony of Pain • 2025</div>
+                <div style="font-size: 0.8rem; color: #666; margin-top: 10px;">Click to view full Cast & Crew →</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="upcoming" class="section">
+        <h2>Upcoming Movies</h2>
+        <div class="grid">
+            <div class="movie-card clickable-card" onclick="openModal('sauharda')">
+                <img src="sauharda.png" alt="Sauharda Poster" class="upcoming-poster">
+                <div class="movie-title">Sauhārda</div>
+                <div class="movie-tag" style="color:#e50914; background: rgba(229, 9, 20, 0.1); display:inline-block; padding: 2px 8px; border-radius: 4px;">COMING SOON</div>
+                <p class="upcoming-desc">Harmony in peace.</p>
+            </div>
+            
+            <div class="movie-card clickable-card" onclick="openModal('illada')">
+                <div class="poster-placeholder" style="background: linear-gradient(135deg, #0f0f0f, #222);">
+                    <span style="color:#e50914; font-weight:bold;">IN PRODUCTION</span>
+                </div>
+                <div class="movie-title">ಇಲ್ಲದ ಇರುವಂತ್ತೆ,ಇದ್ದರು ಇಲ್ಲದಂತೆ</div>
+                <p class="upcoming-desc">Shooting in progress.</p>
+            </div>
+
+            <div class="movie-card clickable-card" onclick="openModal('matam')">
+                <div class="poster-placeholder" style="background: linear-gradient(135deg, #0f0f0f, #222);">
+                    <span style="color:#e50914; font-weight:bold;">IN PROGRESS</span>
+                </div>
+                <div class="movie-title">MaTaM</div>
+                <p class="upcoming-desc">A unique concept you have never seen before.</p>
+            </div>
+
+            <div class="movie-card clickable-card" onclick="openModal('nannottigu')">
+                <div class="poster-placeholder" style="background: linear-gradient(135deg, #0f0f0f, #222);">
+                    <span style="color:#e50914; font-weight:bold;">IN PROGRESS</span>
+                </div>
+                <div class="movie-title">ನನ್ನುೊಟ್ಟಿಗೂ ಇತ್ತು ಈ ಕನಸು</div>
+                <p class="upcoming-desc">story of separated soul</p>
+            </div>
+
+            <div class="movie-card clickable-card" onclick="openModal('nannaya')">
+                <div class="poster-placeholder" style="background: linear-gradient(135deg, #0f0f0f, #222);">
+                    <span style="color:#e50914; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BIG WAIT HAS BIG DREAM</span>
+                </div>
+                <div class="movie-title">ನನ್ನಯ ಪ್ರೀತಿ</div>
+                <p class="upcoming-desc">Love that doesn't end</p>
+            </div>
+
+            <div class="movie-card clickable-card" onclick="openModal('asthira')">
+                <div class="poster-placeholder" style="background: linear-gradient(135deg, #0f0f0f, #222);">
+                    <span style="color:#e50914; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BIG WAIT HAS BIG DREAM</span>
+                </div>
+                <div class="movie-title">Asthira</div>
+                <p class="upcoming-desc">film that busts your imagination</p>
+            </div>
+
+            <div class="movie-card clickable-card" onclick="openModal('projectd')">
+                <div class="poster-placeholder" style="background: linear-gradient(135deg, #0f0f0f, #222);">
+                    <span style="color:#e50914; font-weight:900; text-transform:uppercase; letter-spacing:1px;">BIG WAIT HAS BIG DREAM</span>
+                </div>
+                <div class="movie-title">Project D</div>
+                <p class="upcoming-desc">Absolute cinema</p>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="contact" class="footer">
+        <h3>Contact Us</h3>
+        <p>For inquiries and narrator submissions:</p>
+        <p><a href="mailto:dhanvithkantharaju@hotmail.com" class="contact-link">dhanvithkantharaju@hotmail.com</a></p>
+        <p><a href="tel:+917975955869" class="contact-link">+91 7975955869</a></p>
+        <br>
+        <p>Bengaluru, Karnataka, India</p>
+        <br>
+        <p>&copy; 2025 SVE FILMS / Namm Autograph Productions.</p>
+    </div>
+
+    <div id="movieModal" class="modal-overlay" onclick="closeModal(event)">
+        <div class="modal-content">
+            <span class="modal-close" onclick="forceClose()">×</span>
+            <div class="modal-image"><img id="modal-img" src="" alt="Movie Poster"></div>
+            <div class="modal-details">
+                <h1 id="modal-title" class="modal-h1"></h1>
+                <div id="modal-meta" class="modal-meta"></div>
+                <p id="modal-desc" class="modal-desc"></p>
+                
+                <div id="modal-credits" class="credits-grid"></div>
+
+                <a id="modal-btn" href="#" target="_blank" class="btn" style="display: inline-block; margin-top: 30px;">Watch Movie</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openModal(movie) {
+            const modal = document.getElementById('movieModal');
+            const modalImg = document.getElementById('modal-img');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMeta = document.getElementById('modal-meta');
+            const modalDesc = document.getElementById('modal-desc');
+            const modalCredits = document.getElementById('modal-credits');
+            const modalBtn = document.getElementById('modal-btn');
+
+            if (movie === 'badukina') {
+                modalImg.src = 'badukina-poster.png'; 
+                modalTitle.textContent = 'ಬದುಕಿನ ಪ್ರಶ್ನೆಗೆ ಸಾವು ಉತ್ತರವೇ?';
+                modalMeta.textContent = 'Irony of Pain • 2025 • Kannada';
+                modalDesc.textContent = "A powerful exploration of life's hardest questions. This story delves into the irony of pain and the human spirit's resilience.";
+                
+                // Badukina Credits
+                modalCredits.innerHTML = `
+                    <div class="credit-item"><strong>Director</strong><span>Dhanvith Kantharaju</span></div>
+                    <div class="credit-item"><strong>DOP</strong><span>Chinmay CN</span></div>
+                    <div class="credit-item"><strong>Cast</strong><span>Chinmay GN<br>Dhanvith K Raj</span></div>
+                    <div class="credit-item"><strong>Voice Over Artists</strong><span>Thanvitha BS<br>Prajwal S Gowda<br>Tejeswini R Gowda<br>Kantharaju LB</span></div>
+                `;
+
+                modalCredits.style.display = 'grid';
+                modalBtn.href = 'https://youtu.be/EV6Td6HBNfA?si=o3_g0c0O5o6_2v-T';
+                modalBtn.textContent = 'Watch Movie';
+                modalBtn.style.display = 'inline-block';
+                modalBtn.style.backgroundColor = '#e50914';
+                modalBtn.style.pointerEvents = 'auto';
+            } 
+            else if (movie === 'sauharda') {
+                modalImg.src = 'sauharda.png';
+                modalTitle.textContent = 'Sauhārda';
+                modalMeta.textContent = 'Abhivyakthi • 2026';
+                modalDesc.textContent = 'A film made in MCE by Abhivyakthi and team.'; 
+                
+                // Sauharda Credits
+                modalCredits.innerHTML = `
+                    <div class="credit-item"><strong>Project By</strong><span>MCE CULTURAL TEAM</span></div>
+                    <div class="credit-item"><strong>Director</strong><span>Dhanvith Kantharaju</span></div>
+                    <div class="credit-item"><strong>Cinematography</strong><span>Gridhar Kumar<br>Richith R Gowda</span></div>
+                    <div class="credit-item"><strong>Cast</strong><span>Siddeshh, Darshini SM<br>Raman, Poorvitha V<br>Shobitha, Likhit LD</span></div>
+                `;
+
+                modalCredits.style.display = 'grid'; 
+                modalBtn.href = '#';
+                modalBtn.textContent = 'Coming Soon';
+                modalBtn.style.display = 'inline-block';
+                modalBtn.style.backgroundColor = '#333'; 
+                modalBtn.style.pointerEvents = 'none'; 
+            }
+            else if (movie === 'illada') {
+                modalImg.src = 'logo.png'; 
+                modalTitle.textContent = 'ಇಲ್ಲದ ಇರುವಂತ್ತೆ,ಇದ್ದರು ಇಲ್ಲದಂತೆ';
+                modalMeta.textContent = 'SVE FILMS • 2026';
+                modalDesc.textContent = 'Shooting in progress.';
+                
+                modalCredits.innerHTML = `
+                    <div class="credit-item"><strong>Project By</strong><span>Namm Autograph</span></div>
+                    <div class="credit-item"><strong>Director</strong><span>Dhanvith Kantharaju</span></div>
+                    <div class="credit-item"><strong>Cast</strong><span>Uploading soon</span></div>
+                `;
+                
+                modalCredits.style.display = 'grid'; 
+                
+                modalBtn.href = '#';
+                modalBtn.textContent = 'Coming Soon';
+                modalBtn.style.display = 'inline-block';
+                modalBtn.style.backgroundColor = '#333';
+                modalBtn.style.pointerEvents = 'none';
+            }
+            else if (movie === 'matam') {
+                modalImg.src = 'logo.png'; 
+                modalTitle.textContent = 'MaTaM';
+                modalMeta.textContent = 'SVE FILMS • 2026';
+                
+                modalDesc.innerHTML = 'A unique concept you have never seen before.<br><br>Experiencing different pov in same story of two different film Roll';
+                
+                modalCredits.innerHTML = `
+                    <div class="credit-item"><strong>Project By</strong><span>Namm Autograph</span></div>
+                    <div class="credit-item"><strong>Director</strong><span>Dhanvith Kantharaju</span></div>
+                    <div class="credit-item"><strong>DOP</strong><span>Uploading soon</span></div>
+                    <div class="credit-item"><strong>Cast</strong><span>Uploading soon</span></div>
+                `;
+                
+                modalCredits.style.display = 'grid'; 
+                
+                modalBtn.href = '#';
+                modalBtn.textContent = 'Coming Soon';
+                modalBtn.style.display = 'inline-block';
+                modalBtn.style.backgroundColor = '#333';
+                modalBtn.style.pointerEvents = 'none';
+            }
+            else if (movie === 'nannottigu') {
+                modalImg.src = 'logo.png'; 
+                modalTitle.textContent = 'ನನ್ನುೊಟ್ಟಿಗೂ ಇತ್ತು ಈ ಕನಸು';
+                modalMeta.textContent = 'SVE FILMS • 2026';
+                modalDesc.textContent = 'Story of separated soul.';
+                
+                modalCredits.innerHTML = `
+                    <div class="credit-item"><strong>Project By</strong><span>Namm Autograph</span></div>
+                    <div class="credit-item"><strong>Director</strong><span>Dhanvith Kantharaju</span></div>
+                    <div class="credit-item"><strong>Cast</strong><span>Uploading soon</span></div>
+                `;
+                
+                modalCredits.style.display = 'grid'; 
+                
+                modalBtn.href = '#';
+                modalBtn.textContent = 'Coming Soon';
+                modalBtn.style.display = 'inline-block';
+                modalBtn.style.backgroundColor = '#333';
+                modalBtn.style.pointerEvents = 'none';
+            }
+            else if (movie === 'nannaya') {
+                modalImg.src = 'logo.png'; 
+                modalTitle.textContent = 'ನನ್ನಯ ಪ್ರೀತಿ';
+                modalMeta.textContent = 'SVE FILMS • 202X';
+                modalDesc.textContent = "Love that doesn't end";
+                
+                modalCredits.innerHTML = `
+                    <div class="credit-item"><strong>Project By</strong><span>Namm Autograph</span></div>
+                    <div class="credit-item"><strong>Concept</strong><span>Darshan R Gowda</span></div>
+                    <div class="credit-item"><strong>Director</strong><span>Dhanvith Kantharaju</span></div>
+                    <div class="credit-item"><strong>DOP</strong><span>Uploading soon</span></div>
+                    <div class="credit-item"><strong>Cast</strong><span>Uploading soon</span></div>
+                `;
+                
+                modalCredits.style.display = 'grid'; 
+                
+                modalBtn.href = '#';
+                modalBtn.textContent = 'Coming Soon';
+                modalBtn.style.display = 'inline-block';
+                modalBtn.style.backgroundColor = '#333';
+                modalBtn.style.pointerEvents = 'none';
+            }
+            else if (movie === 'asthira') {
+                modalImg.src = 'logo.png'; 
+                modalTitle.textContent = 'Asthira';
+                modalMeta.textContent = 'SVE FILMS • 202X';
+                modalDesc.textContent = "film that busts your imagination";
+                
+                modalCredits.innerHTML = `
+                    <div class="credit-item"><strong>Project By</strong><span>Namm Autograph</span></div>
+                    <div class="credit-item"><strong>Concept</strong><span>Janisha Kantharaju</span></div>
+                    <div class="credit-item"><strong>Director</strong><span>Dhanvith Kantharaju</span></div>
+                    <div class="credit-item"><strong>DOP</strong><span>Uploading soon</span></div>
+                    <div class="credit-item"><strong>Cast</strong><span>Uploading soon</span></div>
+                `;
+                
+                modalCredits.style.display = 'grid'; 
+                
+                modalBtn.href = '#';
+                modalBtn.textContent = 'Coming Soon';
+                modalBtn.style.display = 'inline-block';
+                modalBtn.style.backgroundColor = '#333';
+                modalBtn.style.pointerEvents = 'none';
+            }
+            else if (movie === 'projectd') {
+                modalImg.src = 'logo.png'; 
+                modalTitle.textContent = 'Project D';
+                modalMeta.textContent = 'SVE FILMS • 202X';
+                modalDesc.innerHTML = 'Under process since 2023.<br><br>Absolute cinema';
+                
+                modalCredits.innerHTML = `
+                    <div class="credit-item"><strong>Project By</strong><span>Namm Autograph</span></div>
+                    <div class="credit-item"><strong>Director</strong><span>Dhanvith Kantharaju</span></div>
+                    <div class="credit-item"><strong>DOP</strong><span>Uploading soon</span></div>
+                    <div class="credit-item"><strong>Cast</strong><span>Uploading soon</span></div>
+                `;
+                
+                modalCredits.style.display = 'grid'; 
+                
+                modalBtn.href = '#';
+                modalBtn.textContent = 'Coming Soon';
+                modalBtn.style.display = 'inline-block';
+                modalBtn.style.backgroundColor = '#333';
+                modalBtn.style.pointerEvents = 'none';
+            }
+
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(event) { if (event.target.id === 'movieModal') { document.getElementById('movieModal').style.display = 'none'; document.body.style.overflow = 'auto'; } }
+        function forceClose() { document.getElementById('movieModal').style.display = 'none'; document.body.style.overflow = 'auto'; }
+    </script>
+</body>
+</html>
