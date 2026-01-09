@@ -10,7 +10,7 @@
 
         /* Navigation */
         nav { padding: 20px; display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; }
-        .nav-logo-text { font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: #e50914; }
+        .nav-logo-text { font-size: 1.5rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; color: #e50914; text-decoration: none; cursor: pointer; }
         .nav-links a { color: #fff; text-decoration: none; margin-left: 20px; font-size: 0.9rem; text-transform: uppercase; }
 
         /* Hero */
@@ -59,7 +59,7 @@
 <body>
 
     <nav>
-        <div class="nav-logo-text">SVE FILMS</div>
+        <a href="https://www.youtube.com/channel/UC2QOBbQUtNZAzxbb3m71MlQ" target="_blank" class="nav-logo-text">SVE FILMS</a>
         <div class="nav-links">
             <a href="#work">Work Done</a>
             <a href="#upcoming">Upcoming</a>
@@ -334,7 +334,7 @@
             else if (movie === 'projectd') {
                 modalImg.src = 'logo.png'; 
                 modalTitle.textContent = 'Project D';
-                modalMeta.textContent = 'SVE FILMS • 20XX';
+                modalMeta.textContent = 'SVE FILMS • 202X';
                 modalDesc.innerHTML = 'Under process since 2023.<br><br>Absolute cinema';
                 
                 modalCredits.innerHTML = `
